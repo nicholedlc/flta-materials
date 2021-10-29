@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'card1.dart';
+import 'card2.dart';
+import 'card3.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -12,12 +15,9 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
   static List<Widget> pages = <Widget>[
-    // TODO: Replace with Card1
-    Container(color: Colors.red),
-    // TODO: Replace with Card2
-    Container(color: Colors.green),
-    // TODO: Replace with Card3
-    Container(color: Colors.blue),
+    const Card1(),
+    const Card2(),
+    const Card3(),
   ];
 
   // Handle tapped tab bar items by setting the index of the item that the user pressed.
@@ -57,3 +57,8 @@ class _HomeState extends State<Home> {
     );
   }
 }
+
+// Key Points:
+// The Scaffold widget implements all your basic visual layout structure needs.
+// The Container widget can be used to group other widgets together.
+// The Stack widget layers child widgets on top of each other.
