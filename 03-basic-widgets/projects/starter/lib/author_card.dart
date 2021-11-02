@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'fooderlich_theme.dart';
 import 'circle_image.dart';
 
-class AuthorCard extends StatelessWidget {
+class AuthorCard extends StatefulWidget {
   final String authorName;
   final String title;
   final ImageProvider? imageProvider;
@@ -13,6 +13,14 @@ class AuthorCard extends StatelessWidget {
     required this.title,
     this.imageProvider,
   }) : super(key: key);
+
+  // Converting StatelessWidget to Stateful widget replaces `build()` with `createState()` and creates the `_AuthorCardState` state class, which stores mutable data that can change over the lifetime of the widget
+  @override
+  State<AuthorCard> createState() => _AuthorCardState();
+}
+
+class _AuthorCardState extends State<AuthorCard> {
+  bool _isFavorited = false;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +33,7 @@ class AuthorCard extends StatelessWidget {
           Row(
             children: [
               CircleImage(
-                imageProvider: imageProvider,
+                imageProvider: widget.imageProvider,
                 imageRadius: 28,
               ),
               // Apply 8 px of padding between the image the text
@@ -34,11 +42,11 @@ class AuthorCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    authorName,
+                    widget.authorName,
                     style: FooderlichTheme.lightTextTheme.headline2,
                   ),
                   Text(
-                    title,
+                    widget.title,
                     style: FooderlichTheme.lightTextTheme.headline3,
                   ),
                 ],
@@ -46,12 +54,17 @@ class AuthorCard extends StatelessWidget {
             ],
           ),
           IconButton(
-            icon: const Icon(Icons.favorite_border),
+            // Checks if the user has favorited this recipe card.
+            // If true, show a filled heart; else show an outlined heart.
+            icon: Icon(_isFavorited ? Icons.favorite : Icons.favorite_border),
             iconSize: 30,
-            color: Colors.grey[400],
+            // Change the color to red
+            color: Colors.red[400],
+            // When the icon button is pressed, it toggles the _isFavorited state via a call to setState()
             onPressed: () {
-              const snackBar = SnackBar(content: Text('Favorite Pressed'));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              setState(() {
+                _isFavorited = !_isFavorited;
+              });
             },
           ),
         ],
