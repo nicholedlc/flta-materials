@@ -25,11 +25,7 @@ class ExploreScreen extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done) {
             // `snapshot.data` returns `ExploreData`, from which `todayRecipes` is extracted to pass to the list view.
             final recipes = snapshot.data?.todayRecipes ?? [];
-            return Center(
-              child: Container(
-                child: const Text('Show TodayRecipeListView'),
-              ),
-            );
+            return TodayRecipeListView(recipes: recipes);
             // If the future is still loading, show a spinner
           } else {
             return const Center(
