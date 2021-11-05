@@ -31,11 +31,10 @@ class FriendPostListView extends StatelessWidget {
               // Since you're nesting 2 list views, it's a good idea to set `primary`
               // to false to let flutter know that this isn't the primary scroll view.
               primary: false,
-              // Even though you set `primary` to false, it's also a good idea
-              // to disable the scrolling for this list view.
-              // That will propagate up to the parent list.
+              // `physics` controls how the scroll view responds to user input.
               physics: const NeverScrollableScrollPhysics(),
               // If this were false, you'd get an unbounded height error.
+              // `shrinkWrap` controls the fixed sscroll area size.
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               itemCount: friendPosts.length,
