@@ -29,11 +29,8 @@ class ExploreScreen extends StatelessWidget {
               children: [
                 TodayRecipeListView(recipes: snapshot.data?.todayRecipes ?? []),
                 const SizedBox(height: 16),
-                // Use a green placeholder container
-                Container(
-                  height: 400,
-                  color: Colors.green,
-                )
+                FriendPostListView(
+                    friendPosts: snapshot.data?.friendPosts ?? []),
               ],
             );
             // If the future is still loading, show a spinner
