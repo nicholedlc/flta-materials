@@ -6,11 +6,36 @@ import '../components/components.dart';
 import '../models/models.dart';
 import '../api/mock_fooderlich_service.dart';
 
-class ExploreScreen extends StatelessWidget {
+class ExploreScreen extends StatefulWidget {
   // Mock server responses
-  final mockService = MockFooderlichService();
 
   ExploreScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ExploreScreen> createState() => _ExploreScreenState();
+}
+
+class _ExploreScreenState extends State<ExploreScreen> {
+  final mockService = MockFooderlichService();
+  late ScrollController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = ScrollController();
+    final scrollListener = () {
+      print('scrolling...');
+      if (_controller.position.atEdge) {
+        if (_controller.position.pixels == 0) {
+          print('i am at the top!');
+        } else {
+          print('i am at the bottom!');
+        }
+      }
+    };
+    _controller.addListener(scrollListener);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +49,7 @@ class ExploreScreen extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done) {
             // When the future is complete, return the primary `ListView`, which holds an explicit list of children (ie.e. the other 2 `ListView`s)
             return ListView(
+              controller: _controller,
               // Vertical is the default value for `scrollDirection`
               scrollDirection: Axis.vertical,
               children: [
