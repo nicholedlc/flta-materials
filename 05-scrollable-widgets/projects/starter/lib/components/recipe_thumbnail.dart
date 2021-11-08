@@ -18,7 +18,7 @@ class RecipeThumbnail extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // `Exanded` widget holds on to an Image
+          // `Expanded` widget holds on to an Image
           // We want the image to fill the remaining space.
           Expanded(
             // Clips the image to make the borders rounded

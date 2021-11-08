@@ -21,8 +21,10 @@ class RecipesGridView extends StatelessWidget {
         // Tell the grid view how many items will be in the grid
         itemCount: recipes.length,
         // This means that there will be only 2 columns
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 400,
+        ),
+        // const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         // For every index, fetch the recipe and create a corresponding `RecipeThumbnail`
         itemBuilder: (context, index) {
           final simpleRecipe = recipes[index];
