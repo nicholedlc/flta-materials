@@ -21,20 +21,18 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   @override
   void initState() {
-    super.initState();
-
     _controller = ScrollController();
-    final scrollListener = () {
-      print('scrolling...');
-      if (_controller.position.atEdge) {
-        if (_controller.position.pixels == 0) {
-          print('i am at the top!');
-        } else {
-          print('i am at the bottom!');
-        }
-      }
-    };
     _controller.addListener(scrollListener);
+
+    super.initState();
+  }
+
+  // The framework calls dispose() when you permanently remove the object and its state from the tree. It’s important to remember to handle any memory cleanup, such as unsubscribing from streams and disposing of animations or controllers. In this case, you’re removing the scroll listener.
+  @override
+  void dispose() {
+    _controller.removeListener(scrollListener);
+
+    super.dispose();
   }
 
   @override
@@ -66,5 +64,17 @@ class _ExploreScreenState extends State<ExploreScreen> {
             );
           }
         });
+  }
+
+  void scrollListener() {
+    print('scrolling... OFFSET: ${_controller.offset}');
+    if (_controller.offset >= _controller.position.maxScrollExtent &&
+        !_controller.position.outOfRange) {
+      print('i am at the bottom!');
+    }
+    if (_controller.offset <= _controller.position.minScrollExtent &&
+        !_controller.position.outOfRange) {
+      print('i am at the top!');
+    }
   }
 }

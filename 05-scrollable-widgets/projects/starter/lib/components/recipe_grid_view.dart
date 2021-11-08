@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 
 import '../components/components.dart';
@@ -22,7 +24,8 @@ class RecipesGridView extends StatelessWidget {
         itemCount: recipes.length,
         // This means that there will be only 2 columns
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 400,
+          // Making maxCrossAxisExtent greater than the device’s width would allow for only one column
+          maxCrossAxisExtent: 500,
         ),
         // const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         // For every index, fetch the recipe and create a corresponding `RecipeThumbnail`
