@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../models/models.dart';
 import 'empty_grocery_screen.dart';
+import 'grocery_item_screen.dart';
 
 class GroceryScreen extends StatelessWidget {
   const GroceryScreen({Key? key}) : super(key: key);
@@ -17,7 +18,31 @@ class GroceryScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          // TODO 11: Present GroceryItemsScreen
+          // Use `Provider.of()` to access the model object, `GroceryManager`.
+          // Returns the `GroceryManager` available in the tree.
+          final manager = Provider.of<GroceryManager>(
+            context,
+            listen: false,
+          );
+          // Adds a new route to the stack of routes
+          Navigator.push(
+              context,
+              // Replaces the entire screen with a platform-specific transition. E.g.:
+              // Android -> slides upwards and fades in
+              // iOS -> slides in from the right
+              MaterialPageRoute(
+                // Creates a new `GroceryItemScreen` within the routes' builder callback
+                builder: (context) => GroceryItemScreen(
+                  // Defines what to do with the created item
+                  onCreate: (item) {
+                    manager.addItem(item);
+                    // Removes the top navigation route item, `GroceryItemScreen`,
+                    // to show the list of grocery items
+                    Navigator.pop(context);
+                  },
+                  onUpdate: (item) {},
+                ),
+              ));
         },
       ),
       // Builds the rest of the Grocery screen's subtree.
