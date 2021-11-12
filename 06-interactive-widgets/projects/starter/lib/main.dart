@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +27,8 @@ class Fooderlich extends StatelessWidget {
           // `ChangeNotifierProvider` creates an instance of `TabManager`,
           //  which listens to tab index changes and notifies its listeners
           ChangeNotifierProvider(create: (context) => TabManager()),
-          // TODO 10: Add GroceryManager Provider
+          // All descendent widgets of Fooderlich can now listen to or acccess `GroceryManager`
+          ChangeNotifierProvider(create: (context) => GroceryManager()),
         ],
         child: const Home(),
       ),
