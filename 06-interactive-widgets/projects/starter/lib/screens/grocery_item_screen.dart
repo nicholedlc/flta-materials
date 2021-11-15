@@ -19,6 +19,13 @@ class GroceryItemScreen extends StatefulWidget {
   // Determines whether the user is creating or editing an item
   final bool isUpdating;
 
+  // GroceryItemScreen({required onCreate}) {
+  //   this.onCreate = onCreate;
+  //   isUpdating = (originalItem != null);
+  //   super(key: key);
+  //
+  // // My code block
+  // }
   const GroceryItemScreen({
     Key? key,
     required this.onCreate,
@@ -88,7 +95,29 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
           IconButton(
             icon: const Icon(Icons.check),
             onPressed: () {
-              // TODO 24: Add callback handler
+              // When the user taps Save, take all the state properties and create a `GroceryItem`
+              final groceryItem = GroceryItem(
+                id: widget.originalItem?.id ?? const Uuid().v1(),
+                name: _nameController.text,
+                importance: _importance,
+                color: _currentColor,
+                quantity: _currentSliderValue,
+                date: DateTime(
+                  _dueDate.year,
+                  _dueDate.month,
+                  _dueDate.day,
+                  _timeOfDay.hour,
+                  _timeOfDay.minute,
+                ),
+              );
+
+              // If the user is updating an existing item, call `onUpdate`
+              if (widget.isUpdating) {
+                widget.onUpdate(groceryItem);
+                // Otherwise, user is creating a new item so call `onCreate`
+              } else {
+                widget.onCreate(groceryItem);
+              }
             },
           ),
         ],
@@ -264,7 +293,6 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
   }
 
   Widget buildTimeField(BuildContext context) {
-    print('🦊 ${context}');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
