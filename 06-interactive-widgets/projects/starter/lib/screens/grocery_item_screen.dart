@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/models.dart';
+import '../components/components.dart';
 
 class GroceryItemScreen extends StatefulWidget {
   // A callback that lets you know when a new item is created
@@ -65,9 +66,9 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
       setState(() {
         _name = _nameController.text;
       });
-
-      super.initState();
     });
+
+    super.initState();
   }
 
   // This will dispose your TextEditingController when you no longer need it.
@@ -111,7 +112,23 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
             buildColorPicker(context),
             const SizedBox(height: 10.0),
             buildQuantityField(context),
-            // TODO: 19: Add Grocery Tile
+            const SizedBox(height: 10.0),
+            GroceryTile(
+              item: GroceryItem(
+                id: 'previewMode',
+                name: _name,
+                importance: _importance,
+                color: _currentColor,
+                quantity: _currentSliderValue,
+                date: DateTime(
+                  _dueDate.year,
+                  _dueDate.month,
+                  _dueDate.day,
+                  _timeOfDay.hour,
+                  _timeOfDay.minute,
+                ),
+              ),
+            ),
           ],
         ),
       ),
