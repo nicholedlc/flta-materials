@@ -103,12 +103,14 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            // TODO 13: Add name TextField
-            // TODO 14: Add Importance selection
-            // TODO 15: Add date picker
-            // TODO 16: Add time picker
-            // TODO 17: Add color picker
-            // TODO 18: Add slider
+            buildNameField(),
+            buildImportanceField(),
+            buildDateField(context),
+            buildTimeField(context),
+            const SizedBox(height: 10.0),
+            buildColorPicker(context),
+            const SizedBox(height: 10.0),
+            buildQuantityField(context),
             // TODO: 19: Add Grocery Tile
           ],
         ),
@@ -116,15 +118,255 @@ class _GroceryItemScreenState extends State<GroceryItemScreen> {
     );
   }
 
-  // TODO: Add buildNameField()
+  Widget buildNameField() {
+    // Lays out elements vertically
+    return Column(
+      // Aligns all widgets in the column to the left
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Item Name',
+          style: GoogleFonts.lato(fontSize: 28.0),
+        ),
+        TextField(
+          // Sets the `TextField`'s TextEdiitingController
+          controller: _nameController,
+          cursorColor: _currentColor,
+          // Styles the text field using `InputDecoration`
+          decoration: InputDecoration(
+            // Gives users an example of what to write
+            hintText: 'E.g. Apples, Banana, 1 Bag of salt',
+            // Customizes the text field's border color
+            enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+            focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: _currentColor)),
+            border: UnderlineInputBorder(
+              borderSide: BorderSide(color: _currentColor),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
-  // TODO: Add buildImportanceField()
+  Widget buildImportanceField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Importance',
+          style: GoogleFonts.lato(fontSize: 28.0),
+        ),
+        // `Wrap` lays out children horizontally.
+        // When there's no more room, it wraps to the next line.
+        Wrap(
+          spacing: 10.0,
+          children: [
+            ChoiceChip(
+              selectedColor: Colors.black,
+              // Check whether the user selected this ChoiceChip.
+              selected: _importance == Importance.low,
+              label: const Text(
+                'low',
+                style: TextStyle(color: Colors.white),
+              ),
+              // Update _importance, if the user selected this choice.
+              onSelected: (selected) {
+                setState(() => _importance = Importance.low);
+              },
+            ),
+            ChoiceChip(
+              selectedColor: Colors.black,
+              selected: _importance == Importance.medium,
+              label: const Text(
+                'medium',
+                style: TextStyle(color: Colors.white),
+              ),
+              onSelected: (selected) {
+                setState(() => _importance = Importance.medium);
+              },
+            ),
+            ChoiceChip(
+              selectedColor: Colors.black,
+              selected: _importance == Importance.high,
+              label: const Text(
+                'high',
+                style: TextStyle(color: Colors.white),
+              ),
+              onSelected: (selected) {
+                setState(() => _importance = Importance.high);
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
-  // TODO: ADD buildDateField()
+  Widget buildDateField(BuildContext context) {
+    // 1
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Date',
+              style: GoogleFonts.lato(fontSize: 28.0),
+            ),
+            // Adds a TextButton to confirm the selected value
+            TextButton(
+              child: const Text('Select'),
+              // Gets the current date when the user presses the button
+              onPressed: () async {
+                final currentDate = DateTime.now();
+                // Presents the date picker. You restrict the date picker and only allow the user to pick a date from today until 5 years in the future.
+                final selectedDate = await showDatePicker(
+                  context: context,
+                  initialDate: currentDate,
+                  firstDate: currentDate,
+                  lastDate: DateTime(currentDate.year + 5),
+                );
+                // Sets `_dueDate` after the user selects a date
+                setState(() {
+                  if (selectedDate != null) {
+                    _dueDate = selectedDate;
+                  }
+                });
+              },
+            ),
+          ],
+        ),
+        // Format the current date and display it with a `Text`
+        Text('${DateFormat('yyyy-MM-dd').format(_dueDate)}'),
+      ],
+    );
+  }
 
-  // TODO: Add buildTimeField()
+  Widget buildTimeField(BuildContext context) {
+    print('🦊 ${context}');
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Time of Day',
+              style: GoogleFonts.lato(fontSize: 28.0),
+            ),
+            TextButton(
+              child: const Text('Select'),
+              onPressed: () async {
+                // Shows the time picker when the user taps the Select button
+                final timeOfDay = await showTimePicker(
+                  // Sets the initial time displayed in the time picker to the current time
+                  initialTime: TimeOfDay.now(),
+                  context: context,
+                );
+                // Once the user selects the time widget, it updates `_timeOfDay`
+                setState(() {
+                  if (timeOfDay != null) {
+                    _timeOfDay = timeOfDay;
+                  }
+                });
+              },
+            ),
+          ],
+        ),
+        Text('${_timeOfDay.format(context)}'),
+      ],
+    );
+  }
 
-  // TODO: Add buildColorPicker()
+  Widget buildColorPicker(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Container(
+              height: 50.0,
+              width: 10.0,
+              color: _currentColor,
+            ),
+            const SizedBox(width: 8.0),
+            Text(
+              'Color',
+              style: GoogleFonts.lato(fontSize: 28.0),
+            ),
+          ],
+        ),
+        TextButton(
+          child: const Text('Select'),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: BlockPicker(
+                    pickerColor: Colors.white,
+                    onColorChanged: (color) {
+                      setState(() => _currentColor = color);
+                    },
+                  ),
+                  actions: [
+                    TextButton(
+                      child: const Text('Save'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
+      ],
+    );
+  }
 
-  // TODO: Add buildQuantityField()
+  Widget buildQuantityField(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Text(
+              'Quantity',
+              style: GoogleFonts.lato(fontSize: 28.0),
+            ),
+            const SizedBox(width: 16.0),
+            Text(
+              _currentSliderValue.toInt().toString(),
+              style: GoogleFonts.lato(fontSize: 18.0),
+            ),
+          ],
+        ),
+        Slider(
+          inactiveColor: _currentColor.withOpacity(0.5),
+          activeColor: _currentColor,
+          value: _currentSliderValue.toDouble(),
+          min: 0.0,
+          max: 100.0,
+          // Set how you want the slider to increment
+          divisions: 100,
+          // Show the current value above the slider (like a tooltip)
+          label: _currentSliderValue.toInt().toString(),
+          // Update `_currentSliderValue` when the value changes
+          onChanged: (double value) {
+            setState(() {
+              _currentSliderValue = value.toInt();
+            });
+          },
+        ),
+      ],
+    );
+  }
 }
