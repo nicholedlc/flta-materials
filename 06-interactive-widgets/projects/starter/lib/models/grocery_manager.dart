@@ -32,7 +32,7 @@ class GroceryManager extends ChangeNotifier {
   }
 
   // Toggles the `isComplete` flag on and off
-  void completedItem(int index, bool change) {
+  void completeItem(int index, bool change) {
     final item = _groceryItems[index];
     _groceryItems[index] = item.copyWith(isComplete: change);
     notifyListeners();
