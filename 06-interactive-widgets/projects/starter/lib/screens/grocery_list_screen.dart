@@ -23,38 +23,66 @@ class GroceryListScreen extends StatelessWidget {
         itemCount: groceryItems.length,
         itemBuilder: (context, index) {
           final item = groceryItems[index];
-          // Wrap gesture widgets (e.g. `Inkwell`) around other widgets that need touch behavior.
-          return InkWell(
-            child: GroceryTile(
-              key: Key(item.id),
-              item: item,
-              onComplete: (change) {
-                if (change != null) {
-                  manager.completeItem(index, change);
-                }
-              },
+          // Wrap `Inkwell` inside a `Dismissible`, a widget that clears an item from the list
+          return Dismissible(
+            // The dismissible widget requires a `Key` so that Flutter
+            // can find and remove the right element in the tree
+            key: Key(item.id),
+            direction: DismissDirection.endToStart,
+            // Use a red background widget with a white trash can `Icon`
+            // aligned in the center and to the right of the `Container`
+            background: Container(
+              color: Colors.red,
+              alignment: Alignment.centerRight,
+              child: const Icon(
+                Icons.delete_forever,
+                color: Colors.white,
+                size: 50.0,
+              ),
             ),
-            // When the gesture recognizes a tap, it presents `GroceryItemScreen`,
-            // letting the user edit the current item.
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => GroceryItemScreen(
-                    originalItem: item,
-                    // `GroceryItemScreen` calls `onUpdate` whent he user updates an item
-                    onUpdate: (item) {
-                      // `GroceryManager` updates the item at the particular index
-                      manager.updateItem(item, index);
-                      // Dimisses `GroceryItemScreen`
-                      Navigator.pop(context);
-                    },
-                    // `onCreate` will not be called since you are updating an existing item
-                    onCreate: (item) {},
-                  ),
+            onDismissed: (direction) {
+              manager.deleteItem(index);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${item.name} dismissed'),
                 ),
               );
             },
+            // Wrap gesture widgets (e.g. `Inkwell`) around other widgets that need touch behavior.
+            child: InkWell(
+              child: GroceryTile(
+                key: Key(item.id),
+                item: item,
+                onComplete: (change) {
+                  if (change != null) {
+                    manager.completeItem(index, change);
+                  }
+                },
+              ),
+              // When the gesture recognizes a tap, it presents `GroceryItemScreen`,
+              // letting the user edit the current item.
+              onTap: () {
+                Navigator.push(
+                  context,
+                  // `MaterialPageRoute` returns an instance of your new screen widget.
+                  // Navigator returns the result of the push whenever the screen pops off the stack
+                  MaterialPageRoute(
+                    builder: (context) => GroceryItemScreen(
+                      originalItem: item,
+                      // `GroceryItemScreen` calls `onUpdate` whent he user updates an item
+                      onUpdate: (item) {
+                        // `GroceryManager` updates the item at the particular index
+                        manager.updateItem(item, index);
+                        // Dimisses `GroceryItemScreen`
+                        Navigator.pop(context);
+                      },
+                      // `onCreate` will not be called since you are updating an existing item
+                      onCreate: (item) {},
+                    ),
+                  ),
+                );
+              },
+            ),
           );
         },
         separatorBuilder: (context, index) {
