@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../models/models.dart';
-import '../screens/screens.dart';
+import '../../models/models.dart';
+import '../../screens/screens.dart';
 
 // The system will tell the router to build and configure a navigator widget
 class AppRouter extends RouterDelegate
@@ -56,8 +56,9 @@ class AppRouter extends RouterDelegate
       onPopPage: _handlePopPage,
       // The stack of pages that describes your navigation stack
       pages: [
-        // TODO: Add SplashScreen
-        // TODO: Add LoginScreen
+        if (!appStateManager.isInitialized) SplashScreen.page(),
+        if (appStateManager.isInitialized && !appStateManager.isLoggedIn)
+          LoginScreen.page(),
         // TODO: Add OnboardingScreen
         // TODO: Add Home
         // TODO: Create new item

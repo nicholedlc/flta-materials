@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/models.dart';
 
 class SplashScreen extends StatefulWidget {
-  // TODO: SplashScreen MaterialPage Helper
+  // Sets the appropriate unique identifier and creates SplashScreen
+  static MaterialPage page() {
+    return MaterialPage(
+      name: FooderlichPages.splashPath,
+      key: ValueKey(FooderlichPages.splashPath),
+      child: const SplashScreen(),
+    );
+  }
 
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -13,7 +22,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // TODO: Initialize App
+    // Use the current context to retrieve the `AppStateManager`
+    // to initialize the app
+    Provider.of<AppStateManager>(context, listen: false).initializeApp();
   }
 
   @override
