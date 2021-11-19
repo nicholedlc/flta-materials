@@ -44,7 +44,8 @@ class AppRouter extends RouterDelegate
     return Navigator(
       // Uses `navigatorKey` - required to retrieve the current navigator
       key: navigatorKey,
-      // TODO: Add onPopPage
+      // Call `_handlePopPage` every time a page pops from the stack
+      onPopPage: _handlePopPage,
       // The stack of pages that describes your navigation stack
       pages: [
         // TODO: Add SplashScreen
@@ -59,7 +60,30 @@ class AppRouter extends RouterDelegate
     );
   }
 
-  // TODO: Add _handlePopPage
+  // When the user taps the Back button or triggers a system back button event,
+  // it fires a helper method, `onPopPage`.
+  bool _handlePopPage(
+    // This is the current `Route`, which contains information like
+    // `RouteSettings` to retrieve the route's name and arguments
+    Route<dynamic> route,
+    // `result` is the value that returns when the route completes -
+    // for example, a value that that a dialog returns
+    result,
+  ) {
+    // Checks if the current route's pop failed
+    if (!route.didPop(result)) {
+      return false;
+    }
+
+    // If the route pop succeeds, this checks the different routes and triggers
+    // the appropriate state changes
+    // TODO: Handle Onboarding and splash
+    // TODO: Handle state when user closes grocery item screen
+    // TODO: Handle state when user closes profile screen
+    // TODO: Handle state when user closes WebView screen
+
+    return true;
+  }
 
   // Sets `setNewRoutePath` to `null` since you aren't supporting Flutter web
   // apps yet.
