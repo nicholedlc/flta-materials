@@ -18,23 +18,31 @@ class AppRouter extends RouterDelegate
   // Listens to the user profile state
   final ProfileManager profileManager;
 
-  // AppRouter(appStateManager, groceryManager, profileManager) {
-  //   this.appStateManager = appStateManager;
-  //   this.groceryManager = groceryManager;
-  //   this.profileManager = profileManager;
-
-  //   navigatorKey = GlobalKey<NavigatorState>();
-  //   // TODO: Add Listeners
-  // }
   AppRouter({
     required this.appStateManager,
     required this.groceryManager,
     required this.profileManager,
   }) : navigatorKey = GlobalKey<NavigatorState>() {
-    // TODO: Add Listeners
+    // Connect the state managers. When the state changes, the router will
+    // reconfigure the navigator with a new set of pages:
+
+    // Determines the state of the app. It manages whether the app
+    // initialized login and if the user completed the onboarding
+    appStateManager.addListener(notifyListeners);
+    // Manages the list of grocery items and the item selection state
+    groceryManager.addListener(notifyListeners);
+    // Manages the user's profile and settings
+    profileManager.addListener(notifyListeners);
   }
 
-  // TODO: Dispose listeners
+  @override
+  void dispose() {
+    appStateManager.removeListener(notifyListeners);
+    groceryManager.removeListener(notifyListeners);
+    profileManager.removeListener(notifyListeners);
+
+    super.dispose();
+  }
 
   // `RouterDelegate` requires you to add a `build()`.
   // This configures your navigator and pages.
