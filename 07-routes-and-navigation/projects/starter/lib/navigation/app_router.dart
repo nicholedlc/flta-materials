@@ -59,7 +59,8 @@ class AppRouter extends RouterDelegate
         if (!appStateManager.isInitialized) SplashScreen.page(),
         if (appStateManager.isInitialized && !appStateManager.isLoggedIn)
           LoginScreen.page(),
-        // TODO: Add OnboardingScreen
+        if (appStateManager.isLoggedIn && !appStateManager.isOnboardingComplete)
+          OnboardingScreen.page(),
         // TODO: Add Home
         // TODO: Create new item
         // TODO: Select GroceryItemScreen
@@ -86,7 +87,12 @@ class AppRouter extends RouterDelegate
 
     // If the route pop succeeds, this checks the different routes and triggers
     // the appropriate state changes
-    // TODO: Handle Onboarding and splash
+
+    // If the user taps the Back button from the Onboarding screen, it calls
+    // `logout()`. This resets the entire app state and user had to log in again
+    if (route.settings.name == FooderlichPages.onboardingPath) {
+      appStateManager.logout();
+    }
     // TODO: Handle state when user closes grocery item screen
     // TODO: Handle state when user closes profile screen
     // TODO: Handle state when user closes WebView screen
