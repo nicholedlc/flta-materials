@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../components/grocery_tile.dart';
 import '../models/models.dart';
@@ -51,7 +52,8 @@ class GroceryListScreen extends StatelessWidget {
                 },
               ),
               onTap: () {
-                // TODO: Tap on grocery item
+                Provider.of<GroceryManager>(context, listen: false)
+                    .groceryItemTapped(index);
               },
             ),
           );
