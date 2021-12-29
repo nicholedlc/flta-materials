@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fooderlich/navigation/app_link.dart';
 
 import '../models/models.dart';
 import '../screens/screens.dart';
 
-class AppRouter extends RouterDelegate //TODO: Add <AppLink>
-    with
-        ChangeNotifier,
-        PopNavigatorRouterDelegateMixin {
+// Set the RouterDelegate’s user-defined data type to AppLink.
+class AppRouter extends RouterDelegate<AppLink>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
@@ -98,7 +98,40 @@ class AppRouter extends RouterDelegate //TODO: Add <AppLink>
 
   // TODO: Apply configuration helper
 
-  // TODO: Replace setNewRoutePath
   @override
-  Future<void> setNewRoutePath(configuration) async => null;
+  // You call setNewRoutePath() when a new route is pushed.
+  // It passes along an AppLink. This is your navigation configuration.
+  Future<void> setNewRoutePath(AppLink newLink) async {
+    switch (newLink.location) {
+      case AppLink.profilePath:
+        profileManager.tapOnProfile(true);
+        break;
+      case AppLink.itemPath:
+        final itemId = newLink.itemId;
+        if (itemId != null) {
+          groceryManager.setSelectedGroceryItem(itemId);
+        } else {
+          groceryManager.createNewItem();
+        }
+        profileManager.tapOnProfile(false);
+        break;
+      case AppLink.homePath:
+        appStateManager.goToTab(newLink.currentTab ?? 0);
+        profileManager.tapOnProfile(false);
+        groceryManager.groceryItemTapped(-1);
+        break;
+      default:
+        break;
+    }
+  }
 }
+
+/*
+Here is the process that goes from a URL to an app state:
+
+1. The user enters a new URL in the web browser’s address bar.
+2. RouteInformationParser parses the new route into your navigation state,
+an instance of AppLink.
+3. Based on the navigation state, RouterDelegate updates the app state
+to reflect the new changes.
+*/
