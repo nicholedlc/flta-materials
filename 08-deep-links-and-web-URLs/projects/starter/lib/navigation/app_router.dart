@@ -94,9 +94,31 @@ class AppRouter extends RouterDelegate<AppLink>
     return true;
   }
 
-  // TODO: Convert app state to applink
+  // This is a helper function that converts the app state to an AppLink object.
+  AppLink getCurrentPath() {
+    if (!appStateManager.isLoggedIn) {
+      return AppLink(location: AppLink.loginPath);
+    } else if (!appStateManager.isOnboardingComplete) {
+      return AppLink(location: AppLink.onboardingPath);
+    } else if (profileManager.didSelectUser) {
+      return AppLink(location: AppLink.profilePath);
+    } else if (groceryManager.isCreatingNewItem) {
+      return AppLink(location: AppLink.itemPath);
+    } else if (groceryManager.selectedGroceryItem != null) {
+      final id = groceryManager.selectedGroceryItem?.id;
+      return AppLink(location: AppLink.itemPath, itemId: id);
+    } else {
+      return AppLink(
+        location: AppLink.homePath,
+        currentTab: appStateManager.getSelectedTab,
+      );
+    }
+  }
 
-  // TODO: Apply configuration helper
+  // Accessing currentConfiguration calls the helper, getCurrentPath(),
+  // which checks the app state and returns the right app link configuration.
+  @override
+  AppLink get currentConfiguration => getCurrentPath();
 
   @override
   // You call setNewRoutePath() when a new route is pushed.
@@ -116,6 +138,7 @@ class AppRouter extends RouterDelegate<AppLink>
         profileManager.tapOnProfile(false);
         break;
       case AppLink.homePath:
+        print('CURRENT TAB: ${newLink.currentTab}');
         appStateManager.goToTab(newLink.currentTab ?? 0);
         profileManager.tapOnProfile(false);
         groceryManager.groceryItemTapped(-1);
@@ -135,3 +158,11 @@ an instance of AppLink.
 3. Based on the navigation state, RouterDelegate updates the app state
 to reflect the new changes.
 */
+
+/*
+1. When the user presses a button or modifies a state, notifyListeners() fires.
+2. RouteInformationParser asks for the current navigation configuration,
+so you must convert your app state to an AppLink.
+3. RouteInformationParser then calls restoreRouteInformation and
+converts AppLink to a URL string.
+*/ 

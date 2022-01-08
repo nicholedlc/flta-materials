@@ -19,17 +19,13 @@ class AppLink {
   AppLink({this.location, this.currentTab, this.itemId});
 
   static AppLink fromLocation(String? location) {
-    print('loc 1 => $location');
     // You need to decode the URL. URLs often include special characters
     // in their paths, so you need to percent-encode the URL path.
     // For example, you’d encode `hello!world` to `hello%21world`.
     location = Uri.decodeFull(location ?? '');
-    print('loc 2 => $location');
     // Parse the URI for query parameter keys and key-value pairs.
     final uri = Uri.parse(location);
-    print('uri => $uri');
     final params = uri.queryParameters;
-    print('params => $params');
 
     // Extract the currentTab from the URL path if it exists
     final currentTab = int.tryParse(params[AppLink.tabParam] ?? '');
@@ -52,7 +48,7 @@ class AppLink {
     String addKeyValPair({required String key, String? value}) =>
         value == null ? '' : '$key=$value&';
 
-    print('location | $location');
+    print('LOCATION : $location');
     switch (location) {
       case loginPath:
         return loginPath;
